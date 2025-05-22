@@ -6,17 +6,19 @@ include(pico-sdk/pico_sdk_init.cmake)
 
 project(rp_fcc)
 
+set(CMAKE_MODULE_PATH 
+    ${CMAKE_CURRENT_SOURCE_DIR}/pico-bidir-dshot
+)
+add_subdirectory(pico-bidir-dshot)
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
-
-
 
 add_executable(rp_fcc
     main.c
 )
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(rp_fcc pico_stdlib)
+target_link_libraries(rp_fcc pico_stdlib DShot_for_RP2040_RP2350_Pi_Pico)
 pico_enable_stdio_usb(rp_fcc 1)
 pico_enable_stdio_uart(rp_fcc 1)
 

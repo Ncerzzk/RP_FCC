@@ -1,6 +1,6 @@
 [submodule "pico-sdk"]
 	path = pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
-[submodule "nanopb"]
-	path = nanopb
-	url = https://github.com/nanopb/nanopb.git
+[submodule "pico-bidir-dshot"]
+	path = pico-bidir-dshot
+	url = https://github.com/Ncerzzk/pico-bidir-dshot.git
