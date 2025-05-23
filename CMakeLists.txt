@@ -14,7 +14,7 @@ add_subdirectory(pico-bidir-dshot)
 pico_sdk_init()
 
 add_executable(rp_fcc
-    main.c
+    main.cpp
     minihdlc/minihdlc.c
 )
 
