@@ -7,3 +7,6 @@
 [submodule "minihdlc"]
 	path = minihdlc
 	url = https://github.com/mengguang/minihdlc.git
+[submodule "PicoLED"]
+	path = PicoLED
+	url = https://github.com/ForsakenNGS/PicoLED.git

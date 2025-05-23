@@ -9,6 +9,7 @@
 #include "pico/binary_info.h"
 #include "hardware/uart.h"
 #include "hardware/irq.h"
+#include "PicoLed.hpp"
 extern "C"
 {
 #include "minihdlc/minihdlc.h"
@@ -18,6 +19,9 @@ extern "C"
 
 #define UART_TX_PIN 0
 #define UART_RX_PIN 1
+
+#define LED_PIN 16
+#define LED_LENGTH 4
 
 void on_uart_rx()
 {
@@ -40,6 +44,14 @@ void frame_received(const uint8_t *frame_buffer, uint16_t frame_length)
     printf("%s\n", frame_buffer);
 }
 
+void led_init(){
+    auto ledStrip = PicoLed::addLeds<PicoLed::WS2812B>(pio0, 0, LED_PIN, LED_LENGTH, PicoLed::FORMAT_GRB);
+    ledStrip.setBrightness(100);
+    ledStrip.fill({100,100,100,100});
+
+    ledStrip.show(); 
+}
+
 int main()
 {
     uart_init(UART_ID, 115200);
@@ -60,6 +72,7 @@ int main()
 
     minihdlc_init(send_char, frame_received);
 
+    led_init();
     printf("hello,world!\n");
     while (1)
     {

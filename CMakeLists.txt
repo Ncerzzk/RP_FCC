@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13...3.27)
 
 # initialize pico-sdk from submodule
 # note: this must happen before project()
+set(PICO_CXX_ENABLE_EXCEPTIONS ON CACHE BOOL "enable CPP exceptions" FORCE) # enabled for PicoLED
 include(pico-sdk/pico_sdk_init.cmake)
 
 project(rp_fcc)
@@ -18,8 +19,10 @@ add_executable(rp_fcc
     minihdlc/minihdlc.c
 )
 
+include(PicoLED/PicoLed.cmake)
+
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(rp_fcc pico_stdlib DShot_for_RP2040_RP2350_Pi_Pico)
+target_link_libraries(rp_fcc pico_stdlib DShot_for_RP2040_RP2350_Pi_Pico PicoLed)
 pico_enable_stdio_usb(rp_fcc 1)
 pico_enable_stdio_uart(rp_fcc 1)
 
