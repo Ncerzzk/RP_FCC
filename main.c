@@ -8,33 +8,62 @@
  #include "pico/stdlib.h"
  #include "pico/binary_info.h"
  #include "hardware/uart.h"
+ #include "hardware/irq.h"
+ #include "minihdlc/minihdlc.h"
+
+
+ #define UART_ID uart0
+
+ #define UART_TX_PIN 0
+ #define UART_RX_PIN 1
  
+ void on_uart_rx() {
+    while (uart_is_readable(UART_ID)) {
+        uint8_t ch = uart_getc(UART_ID);
+        // Can we send it back?
+        minihdlc_char_receiver(ch);
+    }
+}
+
+void send_char(uint8_t data)
+{
+    uart_putc(UART_ID, data);
+}
+
+void frame_received(const uint8_t *frame_buffer, uint16_t frame_length)
+{
+    printf("Received frame: ");
+    printf("%s\n",frame_buffer);
+}
+
+
  int main() {
-     // create feature groups to group configuration settings
-     // these will also show up in picotool info, not just picotool config
-     bi_decl(bi_program_feature_group(0x1111, 0, "UART Configuration"));
-     bi_decl(bi_program_feature_group(0x1111, 1, "Enabled Interfaces"));
-     // stdio_uart configuration and initialisation
-     bi_decl(bi_ptr_int32(0x1111, 1, use_uart, 1));
-     bi_decl(bi_ptr_int32(0x1111, 0, uart_num, 0));
-     bi_decl(bi_ptr_int32(0x1111, 0, uart_tx, 0));
-     bi_decl(bi_ptr_int32(0x1111, 0, uart_rx, 1));
-     bi_decl(bi_ptr_int32(0x1111, 0, uart_baud, 115200));
-     if (use_uart) {
-         stdio_uart_init_full(UART_INSTANCE(uart_num), uart_baud, uart_tx, uart_rx);
-     }
- 
-     // stdio_usb initialisation
-     bi_decl(bi_ptr_int32(0x1111, 1, use_usb, 1));
-     if (use_usb) {
-         stdio_usb_init();
-     }
- 
-     // default printed string
-     bi_decl(bi_ptr_string(0, 0, text, "Hello, world!", 256));
- 
-     while (true) {
-         printf("%s\n", text);
-         sleep_ms(1000);
-     }
+    uart_init(UART_ID, 115200);
+    stdio_usb_init();
+
+
+    gpio_set_function(UART_TX_PIN, UART_FUNCSEL_NUM(UART_ID, UART_TX_PIN));
+    gpio_set_function(UART_RX_PIN, UART_FUNCSEL_NUM(UART_ID, UART_RX_PIN));
+
+    uart_set_hw_flow(UART_ID, false, false);
+    uart_set_format(UART_ID, 8, 1, UART_PARITY_NONE);
+
+    uart_set_fifo_enabled(UART_ID, false);
+
+    irq_set_exclusive_handler(UART0_IRQ , on_uart_rx);
+    irq_set_enabled(UART0_IRQ , true);
+
+    uart_set_irq_enables(UART_ID, true, false); // only enable rx irq
+
+
+    minihdlc_init(send_char, frame_received);
+
+    printf("hello,world!\n");
+    while (1)
+    {
+        printf("wake\n");
+        sleep_ms(1000);
+    }
+        //tight_loop_contents();
+
  }

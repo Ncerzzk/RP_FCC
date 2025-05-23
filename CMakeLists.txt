@@ -15,6 +15,7 @@ pico_sdk_init()
 
 add_executable(rp_fcc
     main.c
+    minihdlc/minihdlc.c
 )
 
 # Add pico_stdlib library which aggregates commonly used features

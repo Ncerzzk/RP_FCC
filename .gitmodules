@@ -4,3 +4,6 @@
 [submodule "pico-bidir-dshot"]
 	path = pico-bidir-dshot
 	url = https://github.com/Ncerzzk/pico-bidir-dshot.git
+[submodule "minihdlc"]
+	path = minihdlc
+	url = https://github.com/mengguang/minihdlc.git
