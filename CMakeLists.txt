@@ -22,7 +22,7 @@ add_executable(rp_fcc
 include(PicoLED/PicoLed.cmake)
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(rp_fcc pico_stdlib DShot_for_RP2040_RP2350_Pi_Pico PicoLed)
+target_link_libraries(rp_fcc pico_stdlib Pico_Bidir_DShot PicoLed)
 pico_enable_stdio_usb(rp_fcc 1)
 pico_enable_stdio_uart(rp_fcc 1)
 
